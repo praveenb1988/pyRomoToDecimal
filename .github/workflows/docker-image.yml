@@ -1,0 +1,32 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag  my-image-romotodecimal:1.0
+    - run: |
+        #mkdir pathupload
+        echo "artifactPath=${{ github.workspace }}" >> $GITHUB_ENV
+    - name: Upload Docker image Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        #Artifactory name
+        name: myartifact
+        #a file, dir or wildcard pattern that describes what to upload
+        path: ${{ env.artifactPath }}
+        if-no-files-found: error
+        #Duration aft which artifactory will expire
+        retention-days: 5
+      
