@@ -14,8 +14,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: docker login
+      run: |
+         echo $CR_PAT | docker login ghcr.io -u praveenb1988 --password-stdin
+      env:
+         CR_PAT: ${{ secrets.CR_PAT }}
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag  my-image-romotodecimal:1.0
+      run: | 
+        docker build . --file Dockerfile --tag  ghcr.io/praveenb1988/pyromodecimal:latest
+        docker push  ghcr.io/praveenb1988/pyromodecimal:latest
     - run: |
         #mkdir pathupload
         echo "artifactPath=${{ github.workspace }}" >> $GITHUB_ENV
